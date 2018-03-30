@@ -1,3 +1,3 @@
 # nfa021
 # Je ne vois pas le cahier des charges ??
-C'est en cours, il n'est pas tout a fait terminé.
+Je viens de dépoer le cahier des charges qui est bien avancé. Il manque la partie "developpements", je ne sais pas ce qu'elle doit contenir. Peut être les dévs découpés en tâches ?
