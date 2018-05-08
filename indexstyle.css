@@ -1,0 +1,62 @@
+form {
+    margin-left:auto;
+    margin-right:auto;
+    max-width: 500px;
+    background: #f4f4f4;
+    padding: 25px 15px 25px 10px;
+    font: 12px Georgia, "Times New Roman", Times, serif;
+    color: #888;
+    text-shadow: 1px 1px 1px #FFF;
+    border:1px solid #E4E4E4;
+}
+
+legend {
+	font-weight: bold;
+}
+
+label {
+    display: block;
+    margin: 0px;
+    padding-bottom: 6px;
+    padding-top: 3px;
+}
+
+input {
+	width: 100%;
+}
+
+.boutons {
+	display: flex;
+/* 	background: black; */
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #cacaca;
+    opacity: 1; /* Firefox */
+}
+
+.civiliteclient {
+	display: inline-flex;
+}
+
+#submitbutton, #boutoneffacer {
+    background: #cc3300;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+#boutoneffacer {
+	background: #f4f4f4;
+    text-shadow: 1px 1px 1px #666666;
+    margin-left: 12px;
+	}
+
+#submitbutton:hover, #boutoneffacer:hover {
+    background: #770000;
+}
