@@ -24,7 +24,7 @@ class Bmanager
                 $preparedStatement = $pdo->prepare($requete);
                 $preparedStatement->execute(array(
                     ':username' => $username,
-                    ':password' => $password
+                    ':password' => sha1($password)
                 ));
                 if ($preparedStatement->rowCount() == 1) {
                     $_SESSION['username'] = $username;
@@ -66,10 +66,6 @@ class Bmanager
     {
         // Register new user
         if (! empty($email) && ! empty($password) && ! empty($passwordrepeat)) {
-//             echo ('<br>-=> bmanager->function registerUser');
-//             echo ("<br>-=> email : ".$email);
-//             echo ("<br>-=> password : ".$password);
-//             echo ("<br>-=> passwordrepeat : ".$passwordrepeat);
             try {
                 // Ask for a pdo statement
                 $connection = new Connection('127.0.0.1:3306', 'sharedgifts', 'UTF-8', 'root', '');
@@ -93,8 +89,9 @@ class Bmanager
                             $sth = $pdo->prepare($requete);
                             $sth->execute(array(
                                 ':email' => $email,
-                                ':password' => $password
+                                ':password' => sha1($password)
                             ));
+                            $this->login($email, $password);
                             $message = "Cool ! Le compte $email vient d'être crée.";
                         }
                     }
