@@ -7,7 +7,7 @@ if (! empty($submitbutton) and ! empty($email)) {
         $bmanager = new Bmanager();
         $message = $bmanager->registerUser($email, $password, $passwordrepeat);
         if (strpos($message, 'Cool') !== false) {
-             header('Location: accueil.php');
+            header('Location: accueil.php');
         } else {
             echo ('<br>' . $message);
         }
@@ -55,7 +55,8 @@ if (! empty($submitbutton) and ! empty($email)) {
 			</div>
 			<div class="boutons">
 				<div>
-					<label for="submitbutton"></label><input type="submit"
+					<label for="submitbutton"></label>
+					<input type="submit"
 						id="submitbutton" value="Créer mon compte" name="submitbutton" />
 				</div>
 				<div>

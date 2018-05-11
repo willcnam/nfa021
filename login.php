@@ -4,7 +4,7 @@ include_once 'connection.php';
 include_once 'bmanager.php';
 extract($_POST);
 
-if (isset($login)) {
+if (isset($loginbutton)) {
     if (! empty($username) and ! empty($password)) {
         try {
             $bmanager = new Bmanager();
@@ -27,7 +27,7 @@ if (isset($login)) {
 <head>
 <meta charset="UTF-8">
 <title>A3E1 Login</title>
-<!-- <link rel="stylesheet" type="text/css" href="main.css" /> -->
+<link rel="stylesheet" type="text/css" href="indexstyle.css" />
 </head>
 <body>
 	<h1>Login</h1>
@@ -35,10 +35,11 @@ if (isset($login)) {
 	    echo ($message.'<br><br>');
 	} ?>
 	<form action="login.php" method="post">
-		<input type="text" placeholder="E-mail" name="username"
-			id="username" /><br> <br> <input type="password"
-			placeholder="Password" name="password" id="password" /><br> <br> <input
-			type="submit" name="login" value="Login" />
+		<input type="text" placeholder="E-mail" name="username" id="username" required autofocus /><br> <br> 
+		<input type="password" placeholder="Password" name="password" id="password" required /><br> <br> 
+					<div class="boutons">
+		<input type="submit" name="loginbutton" value="Login" id="loginbutton" />
+		</div>
 	</form>
 	<br>
 	<a href="register.php">Créer un compte</a>
