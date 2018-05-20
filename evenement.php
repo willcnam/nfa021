@@ -30,7 +30,7 @@ include_once 'bmanager.php';
 	    $connection = new Connection('127.0.0.1:3306', 'sharedgifts', 'UTF-8', 'root', '');
 	    $pdo = $connection->dbconnect();
 	    // Request evenement list
-	    $requete = 'select nom_evt from evenement order by id_evt desc';
+	    $requete = 'select nom_evt from evenement order by id_evenement desc';
 	    $preparedStatement = $pdo->prepare($requete);
 	    $preparedStatement->execute();
 	    if ($preparedStatement->rowCount() > 0) {
