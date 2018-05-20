@@ -1,0 +1,15 @@
+  -- > Table evenement
+
+drop table evenement;
+create table evenement (
+	id_evenement int primary key auto_increment,
+	nom_evt varchar(255),
+    dateDeCreation_evt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    dateDeModification_evt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+insert into evenement ( nom_evt )
+values 
+	( "Noel 2018"),
+	( "Noel 2019")
+;
