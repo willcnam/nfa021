@@ -6,10 +6,11 @@ include_once 'connection.php';
 class Bmanager
 {
 
-    // private $db;
+    private $dbconf;
+    
     public function __construct()
     {
-        // $this->db = $db;
+        $this->dbconf = include('config/localdb.php');
     }
 
     public function login($username, $password)
@@ -17,7 +18,7 @@ class Bmanager
         if (isset($username) and isset($password)) {
             try {
                 // Ask for a pdo statement
-                $connection = new Connection('127.0.0.1:3306', 'sharedgifts', 'UTF-8', 'root', '');
+                $connection = new Connection($this->dbconf);
                 $pdo = $connection->dbconnect();
                 // Look for $username with $password in db
                 $requete = 'select email_ut from utilisateur where email_ut = :username and mdp_ut = :password';
@@ -46,7 +47,7 @@ class Bmanager
         if ($password == $passwordrepeat) {
             try {
                 // Ask for a pdo statement
-                $connection = new Connection('127.0.0.1:3306', 'sharedgifts', 'UTF-8', 'root', '');
+                $connection = new Connection($this->dbconf);
                 $pdo = $connection->dbconnect();
                 $pdo = $requete = 'insert into utilisateur (email_ut, mdp_ut) values (:email, :password)';
                 $sth = $pdo->prepare($requete);
@@ -68,7 +69,7 @@ class Bmanager
         if (! empty($email) && ! empty($password) && ! empty($passwordrepeat)) {
             try {
                 // Ask for a pdo statement
-                $connection = new Connection('127.0.0.1:3306', 'sharedgifts', 'UTF-8', 'root', '');
+                $connection = new Connection($this->dbconf);
                 $pdo = $connection->dbconnect();
                 // Cet email existe-t-il déjà ?
                 $CountEmail_sql = 'Select count(email_ut) from utilisateur where email_ut = :email';
@@ -101,6 +102,10 @@ class Bmanager
                 trigger_error($e->getMessage(), E_USER_ERROR);
             }
         }
+    }
+    
+    public function listeDesEvenements() {
+        
     }
     
 }

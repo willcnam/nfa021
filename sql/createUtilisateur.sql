@@ -2,7 +2,7 @@
   
 drop table utilisateur;
 create table utilisateur (
-	id_utilisateur int primary key auto_increment,
+	id_utilisateur  int primary key auto_increment,
 	email_ut varchar(255),
 	mdp_ut varchar(255),
     dateDeCreation_ut timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

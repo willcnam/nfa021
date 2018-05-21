@@ -8,13 +8,13 @@ class Connection {
     private $user = 'root';
     private $password = '';
 
-    public function __construct($hote, $bd, $charset, $user, $password)
+    public function __construct($db)
     {
-        $this->hote = $hote;
-        $this->bd = $bd;
-        $this->charset = $charset;
-        $this->user = $user;
-        $this->password = $password;
+        $this->hote = $db['hote'];
+        $this->bd = $db['bd'];
+        $this->charset = $db['charset'];
+        $this->user = $db['user'];
+        $this->password = $db['password'];
     }
 
     public function getHote()

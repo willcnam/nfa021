@@ -17,7 +17,7 @@ if (empty($_SESSION['username'])) {
 <nav>
 	<ul>
 		<li><a href="accueil.php" class="active">Accueil</a></li>
-		<li><a href="evenement.php">Evénements</a></li>
+		<li><a href="listeDesEvenements.php">Evénements</a></li>
 	</ul>
 </nav>
 <section>
