@@ -7,10 +7,10 @@ class Bmanager
 {
 
     private $dbconf;
-    
+
     public function __construct()
     {
-        $this->dbconf = include('config/localdb.php');
+        $this->dbconf = include ('config/localdb.php');
     }
 
     public function login($username, $password)
@@ -103,9 +103,73 @@ class Bmanager
             }
         }
     }
-    
-    public function listeDesEvenements() {
-        
+
+    public function listeDesEvenements()
+    {
+        try {
+            // Ask for a pdo statement
+            $connection = new Connection($this->dbconf);
+            $pdo = $connection->dbconnect();
+            // Request evenement list
+            $requete = 'select id_evenement, nom_evt from evenement order by id_evenement desc';
+            $preparedStatement = $pdo->prepare($requete);
+            $preparedStatement->execute();
+            if ($preparedStatement->rowCount() > 0) {
+                $rows = $preparedStatement->fetchAll();
+                return $rows;
+            } else {
+                echo ('Aucun évênement actuellement. Cliquez sur Créer un évênement');
+                return null;
+            }
+        } catch (Exception $e) {
+            trigger_error($e->getMessage(), E_USER_ERROR);
+        }
     }
-    
+
+    public function getEvtById($id)
+    {
+        try {
+            // Ask for a pdo statement
+            $connection = new Connection($this->dbconf);
+            $pdo = $connection->dbconnect();
+            // Request one evenement
+            $requete = 'select id_evenement, nom_evt from evenement where id_evenement=' . $id . ';';
+            $preparedStatement = $pdo->prepare($requete);
+            $preparedStatement->execute();
+            if ($preparedStatement->rowCount() > 0) {
+                $row = $preparedStatement->fetchAll();
+                return $row;
+            } else {
+                echo ('Aucun évênement avec cet id !');
+                return null;
+            }
+        } catch (Exception $e) {
+            trigger_error($e->getMessage(), E_USER_ERROR);
+        }
+    }
+
+    public function getInscritByEvt($id_evt)
+    {
+        try {
+            // Ask for a pdo statement
+            $connection = new Connection($this->dbconf);
+            $pdo = $connection->dbconnect();
+            // Request inscrit list by evt
+            $requete = 'select id_inscrit, id_utilisateur_ins, id_evenement_ins, email_ut
+                from inscrit
+                left join utilisateur
+                 on id_utilisateur=id_utilisateur_ins where id_evenement_ins=' . $id_evt . ';';
+            $preparedStatement = $pdo->prepare($requete);
+            $preparedStatement->execute();
+            if ($preparedStatement->rowCount() > 0) {
+                $rows = $preparedStatement->fetchAll();
+                return $rows;
+            } else {
+                echo ('Aucun inscrit à cet évênement actuellement.');
+                return null;
+            }
+        } catch (Exception $e) {
+            trigger_error($e->getMessage(), E_USER_ERROR);
+        }
+    }
 }
