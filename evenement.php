@@ -19,9 +19,9 @@ $bmanager = new Bmanager();
 // echo ($_GET['id']);
 try {
     // Request evenement
-    $evt = $bmanager->getEvtById($_GET['id']);
-    if (sizeof($evt) > 0) {
-        echo ('<h1>' . $evt[0]["nom_evt"] . '</h1>');
+    $particip = $bmanager->getEvtById($_GET['id']);
+    if (sizeof($particip) > 0) {
+        echo ('<h1>' . $particip[0]["nom_evt"] . '</h1>');
     } else {}
 } catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
@@ -33,19 +33,19 @@ try {
 	<ul>
 		<li><a href="accueil.php">Accueil</a></li>
 		<li><a href="listeDesEvenements.php">Evénements</a></li>
-		<li><a href="evenements.php" class="active">Liste des participants</a></li>
+		<li><a href="" class="active">Liste des participants</a></li>
 	</ul>
 </nav>
 <section>
 	<?php
-echo ('<p>Liste des participants à ' . $evt[0]["nom_evt"] . '</p>');
+echo ('<p>Liste des participants à ' . $particip[0]["nom_evt"] . '</p>');
 try {
     // Request inscrit list for this evt
-    $inscrits = $bmanager->getInscritByEvt($_GET['id']);
+    $inscrits = $bmanager->getInscritsByEvt($_GET['id']);
     if (sizeof($inscrits) > 0) {
         echo ('<table>');
         foreach ($inscrits as $isncrit) {
-            echo ('<tr><td><a href="">' . $isncrit["id_inscrit"] . ' ' . $isncrit["email_ut"] . '</a></td></tr>');
+            echo ('<tr><td><a href="participant.php?id='.$isncrit["id_inscrit"].'">' . $isncrit["id_inscrit"] . ' ' . $isncrit["email_ut"] . '</a></td></tr>');
         }
         echo ('</table>');
     } else {

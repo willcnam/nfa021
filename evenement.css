@@ -55,6 +55,7 @@ nav li a:hover, footer li a:hover {
 
 nav li a.active, footer li a.active {
     background-color: #a02433;
+    cursor: default;
 }
 
 * {
