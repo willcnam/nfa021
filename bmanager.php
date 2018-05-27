@@ -21,7 +21,7 @@ class Bmanager
                 $connection = new Connection($this->dbconf);
                 $pdo = $connection->dbconnect();
                 // Look for $username with $password in db
-                $requete = 'select email_ut from utilisateur where email_ut = :username and mdp_ut = :password';
+                $requete = 'select id_utilisateur, email_ut from utilisateur where email_ut = :username and mdp_ut = :password';
                 $preparedStatement = $pdo->prepare($requete);
                 $preparedStatement->execute(array(
                     ':username' => $username,
@@ -30,6 +30,9 @@ class Bmanager
                 if ($preparedStatement->rowCount() == 1) {
                     $_SESSION['username'] = $username;
                     $_SESSION['password'] = sha1($password);
+                    $row = $preparedStatement->fetch();
+                    $_SESSION['id_utilisateur'] = $row["id_utilisateur"];
+                    // var_dump($row);
                     return true;
                 } else {
                     $_SESSION['username'] = '';
@@ -126,6 +129,53 @@ class Bmanager
         }
     }
 
+    public function creerEvenements($id_new_evt)
+    {
+        if (isset($id_new_evt) and ! empty($id_new_evt)) {
+            try {
+                // Ask for a pdo statement
+                $connection = new Connection($this->dbconf);
+                $pdo = $connection->dbconnect();
+                // Creer un evenement
+                $requete = 'insert into evenement (nom_evt) values (:id_new_evt)';
+                $preparedStatement = $pdo->prepare($requete);
+                $preparedStatement->execute(array(
+                    ':id_new_evt' => $id_new_evt
+                ));
+            } catch (Exception $e) {
+                if ((int) $e->getCode() == 23000) {
+                    return "Cet événement existe déjà !";
+                } else {
+                    trigger_error($e->getMessage(), E_USER_ERROR);
+                }
+            }
+        }
+    }
+
+    public function addCurrentUser2currentEvent($currentUser, $currentEvent)
+    {
+        if (! empty($currentUser) and ! empty($currentEvent)) {
+            try {
+                // Ask for a pdo statement
+                $connection = new Connection($this->dbconf);
+                $pdo = $connection->dbconnect();
+                // Request one evenement
+                $requete = 'insert into inscrit (id_utilisateur_ins, id_evenement_ins) values (:currentUser, :currentEvent)';
+                $preparedStatement = $pdo->prepare($requete);
+                $preparedStatement->execute(array(
+                    ':currentUser' => $currentUser,
+                    ':currentEvent' => $currentEvent
+                ));
+            } catch (Exception $e) {
+                if ((int) $e->getCode() == 23000) {
+                    return "Vous participer déjà à cet événement !";
+                } else {
+                    trigger_error($e->getMessage(), E_USER_ERROR);
+                }
+            }
+        }
+    }
+
     public function getEvtById($id)
     {
         try {
@@ -198,8 +248,9 @@ class Bmanager
             trigger_error($e->getMessage(), E_USER_ERROR);
         }
     }
-    
-    public function getparticipantById($id_participant) {
+
+    public function getparticipantById($id_participant)
+    {
         try {
             // Ask for a pdo statement
             $connection = new Connection($this->dbconf);
@@ -223,5 +274,50 @@ class Bmanager
             trigger_error($e->getMessage(), E_USER_ERROR);
         }
     }
-    
+
+    // Proposer un cadeau de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
+    public function suggestGift($id_utilisateur, $idEvtCourant, $id_participant_pour, $nom_cad, $prix_cad)
+    {
+        if (! empty($id_utilisateur) and ! empty($idEvtCourant) and ! empty($id_participant_pour) and ! empty($nom_cad) and ! empty($prix_cad)) {
+            try {
+                // Trouver l'id_participant de l'utilisateur
+                // Ask for a pdo statement
+                $connection = new Connection($this->dbconf);
+                $pdo = $connection->dbconnect();
+                // Request participant
+                $requete = "select id_inscrit
+                        from inscrit
+                         where id_utilisateur_ins = :id_utilisateur 
+                            and id_evenement_ins = :idEvtCourant ;";
+                $preparedStatement = $pdo->prepare($requete);
+                $preparedStatement->execute(array(
+                    ':id_utilisateur' => $id_utilisateur,
+                    ':idEvtCourant' => $idEvtCourant
+                ));
+                if ($preparedStatement->rowCount() > 0) {
+                    $row = $preparedStatement->fetch();
+                    $id_participant_de = $row['id_inscrit'];
+                } else {
+                    echo ('Aucun participant avec cet id.');
+                    return null;
+                }
+                // Créer le cadeau
+                $requete = 'insert into cadeau (nom_cad, prix_cad, id_inscrit_de_cad, id_inscrit_pour_cad) 
+                                                values (:nom_cad, :prix_cad, :id_inscrit_de_cad, :id_inscrit_pour_cad)';
+                $preparedStatement = $pdo->prepare($requete);
+                $preparedStatement->execute(array(
+                    ':nom_cad' => $nom_cad,
+                    ':prix_cad' => $prix_cad,
+                    ':id_inscrit_de_cad' => $id_participant_de,
+                    ':id_inscrit_pour_cad' => $id_participant_pour
+                ));
+            } catch (Exception $e) {
+                if ((int) $e->getCode() == 23000) {
+                    return "Cette proposition de cadeau existe déjà !";
+                } else {
+                    trigger_error($e->getMessage(), E_USER_ERROR);
+                }
+            }
+        }
+    }
 }

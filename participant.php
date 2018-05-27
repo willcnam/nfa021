@@ -3,10 +3,16 @@ session_start();
 if (empty($_SESSION['username'])) {
     header("Location: login.php");
 }
-include_once 'connection.php';
 include_once 'bmanager.php';
-
 $bmanager = new Bmanager();
+extract($_POST);
+
+// Proposer un cadeau de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
+if (!empty($suggestGiftButton) and !empty($nom_new_cad) and !empty($prix_new_cad)) {
+    //echo ('$suggestGiftButton n est pas vide ');
+    //echo ($_SESSION['id_utilisateur'].' - '. $_SESSION['idEvtCourant'] .' - '. $_GET['id'].' - '. $_POST['nom_new_cad'].' - '. $_POST['prix_new_cad']);
+    $bmanager->suggestGift($_SESSION['id_utilisateur'], $_SESSION['idEvtCourant'], $_GET['id'], $_POST['nom_new_cad'], $_POST['prix_new_cad']);
+}
 ?>
 <html>
 <head>
@@ -14,30 +20,31 @@ $bmanager = new Bmanager();
 <title>Participant</title>
 <link rel="stylesheet" type="text/css" href="evenement.css" />
 </head>
-<header>
+<body id="participant">
+	<header id="participant">
 <?php
 // echo ($_GET['id']);
 try {
     // Request participant
     $particip = $bmanager->getparticipantById($_GET['id']);
     if (sizeof($particip) > 0) {
-        echo ('<h1>' . $particip[0]["email_ut"] . '</h1>');
+        $_SESSION['participantCourant'] = $particip[0]["email_ut"];
+        echo ('<h1>' . $_SESSION['participantCourant'] . '</h1>');
     } else {}
 } catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
 ?>
 	<h3>...</h3>
-</header>
-<nav>
-	<ul>
-		<li><a href="accueil.php">Accueil</a></li>
-		<li><a href="listeDesEvenements.php">Evénements</a></li>
-		<li><a href="evenements.php">Liste des participants</a></li>
-		<li><a href="" class="active">Participant</a></li>
-	</ul>
-</nav>
-<section>
+	</header>
+	<nav>
+		<ul>
+			<li><a href="accueil.php">Evénements</a></li>
+			<li><?php echo('<a href="evenement.php?id=' . $_SESSION['idEvtCourant'] . '">' . $_SESSION['evtCourant'] . '</a>')?></li>
+			<li><a href="evenements.php" class="active"><?php echo($_SESSION['participantCourant'])?></a></li>
+		</ul>
+	</nav>
+	<section>
 	<?php
 echo ('<p>Liste des cadeaux pour ' . $particip[0]["email_ut"] . '</p>');
 try {
@@ -56,13 +63,30 @@ try {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
 ?>
+<!-- Proposer un cadeau  --> 
+	<section>
+		<form action="participant.php?id=<?php echo ($_GET['id'])?>" method="post">
+				<label for="nom_cad">Nouvelle propositin de cadeau</label> <input type="text" id="nom_cad"
+					placeholder="Saisir un nom ..." name="nom_new_cad" />
+				<label for="prix_cad"></label> <input type="text" id="nom_cad"
+					placeholder="Saisir un prix" name="prix_new_cad" />
+				<div class="boutons">
+					<div>
+						<label for="submitbutton"></label> 
+						<input type="submit"
+							id="suggestGiftButton" value="Proposer" name="suggestGiftButton"/>
+					</div>
+				</div>
+		</form>
+	</section>
+
 </section>
-<footer>
-	<ul>
-		<li><a href="disconnection.php">Déconnexion</a></li>
-		<li><a href="register.php">Inscription</a></li>
-	</ul>
-</footer>
-<body></body>
+	<footer>
+		<ul>
+			<li><a href="disconnection.php">Déconnexion</a></li>
+			<li><a href="register.php">Inscription</a></li>
+		</ul>
+	</footer>
+</body>
 
 </html>
