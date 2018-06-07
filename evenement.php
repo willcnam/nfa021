@@ -45,13 +45,19 @@ echo ('
 
 // Liste des participants
 echo ('<br><h3>Liste des participants à ' . $_SESSION['evtCourant'] . '</h3>');
+echo('<aside>');
+echo ('<form action="evenement.php?id='.$_GET['id'].'" method="post">');
+echo ('		<input type="submit" id="participerEvt" value="Participer à cet événement" name="participerEvt"/>
+	</form>');
+echo('</aside>');
 try {
-    // Request inscrit list for this evt
+    // liste des inscrits à cet evt
     $inscrits = $bmanager->getInscritsByEvt($_GET['id']);
     if (sizeof($inscrits) > 0) {
         echo ('<table>');
         foreach ($inscrits as $isncrit) {
-            echo ('<tr><td><a href="participant.php?id=' . $isncrit["id_inscrit"] . '">' . $isncrit["id_inscrit"] . ' ' . $isncrit["email_ut"] . '</a></td></tr>');
+//             echo ('<tr><td>'.$isncrit["id_inscrit"].'</td>
+            echo ('<tr><td><a href="participant.php?id=' . $isncrit["id_inscrit"] . '">' . ' ' . $isncrit["email_ut"] . '</a></td></tr>');
         }
         echo ('</table>');
     } else {
@@ -62,13 +68,10 @@ try {
 }
 // Bouton Participer
 echo ('</section>');
-echo ('<form action="evenement.php?id='.$_GET['id'].'" method="post">');
-echo ('		<input type="submit" id="participerEvt" value="Participer" name="participerEvt"/>
-	</form>');
 ?>
 	<footer>
 		<ul>
-			<li><a href="disconnection.php">Déconnexion</a></li>
+			<li><a href="disconnection.php">Déconnexion <?php echo ($_SESSION['username'])?></a></li>
 			<li><a href="register.php">Inscription</a></li>
 		</ul>
 	</footer>

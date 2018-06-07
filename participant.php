@@ -44,27 +44,8 @@ try {
 			<li><a href="evenements.php" class="active"><?php echo($_SESSION['participantCourant'])?></a></li>
 		</ul>
 	</nav>
-	<section>
-	<?php
-echo ('<p>Liste des cadeaux pour ' . $particip[0]["email_ut"] . '</p>');
-try {
-    // Request inscrit list for this evt
-    $cadeaux = $bmanager->getCadeauxForParticipant($_GET['id']);
-    if (sizeof($cadeaux) > 0) {
-        echo ('<table>');
-        foreach ($cadeaux as $cadeau) {
-            echo ('<tr><td>' . $cadeau["id_cadeau"] . ' ' . $cadeau["nom_cad"] . ' ' . $cadeau["prix_cad"] . ' ' . $cadeau["id_inscrit_de_cad"] . '</td></tr>');
-        }
-        echo ('</table>');
-    } else {
-        echo ('Aucun inscrit à cet évênement actuellement.');
-    }
-} catch (Exception $e) {
-    trigger_error($e->getMessage(), E_USER_ERROR);
-}
-?>
 <!-- Proposer un cadeau  --> 
-	<section>
+	<aside>
 		<form action="participant.php?id=<?php echo ($_GET['id'])?>" method="post">
 				<label for="nom_cad">Nouvelle propositin de cadeau</label> <input type="text" id="nom_cad"
 					placeholder="Saisir un nom ..." name="nom_new_cad" />
@@ -78,12 +59,31 @@ try {
 					</div>
 				</div>
 		</form>
-	</section>
+	</aside>
 
+	<section>
+	<?php
+echo ('<p>Idées de cadeaux pour ' . $particip[0]["email_ut"] . '</p>');
+try {
+    // Liste des propositions de cadeau
+    $cadeaux = $bmanager->getCadeauxForParticipant($_GET['id']);
+    if (sizeof($cadeaux) > 0) {
+        echo ('<table>');
+        foreach ($cadeaux as $cadeau) {
+            echo ('<tr><td>' . $cadeau["id_cadeau"] . '</td><td>' . $cadeau["nom_cad"] . '</td><td>' . $cadeau["prix_cad"] . '</td><td>' . $cadeau["id_inscrit_de_cad"] . '</td></tr>');
+        }
+        echo ('</table>');
+    } else {
+        echo ('Aucun inscrit à cet évênement actuellement.');
+    }
+} catch (Exception $e) {
+    trigger_error($e->getMessage(), E_USER_ERROR);
+}
+?>
 </section>
 	<footer>
 		<ul>
-			<li><a href="disconnection.php">Déconnexion</a></li>
+			<li><a href="disconnection.php">Déconnexion <?php echo ($_SESSION['username'])?></a></li>
 			<li><a href="register.php">Inscription</a></li>
 		</ul>
 	</footer>

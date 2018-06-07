@@ -1,9 +1,12 @@
 body {
-	background-color: #e6f3ff;
+	background-color: #edeff3;
 }
-header#accueil {
-	background-color: #5c832f;
+header#accueil, header#evenement, header#participant {
+	background-color: #cccc66;
+	background-image: url('img/banner7.png');
 	color: white;
+	text-shadow: 1px 2px #49617f;
+/* 	background-size: auto; */
 }
 header#evenement {
 	background-color: #5c832f;
@@ -17,7 +20,7 @@ header#participant {
 header {
 	height: 110px;
 	display: block;
-	/* background-image: url('img/img_02.jpg'); */
+/* 	background-image: url('img/banner.jpg'); */
 	padding: 20px;
 	color: #323d4f;
 }
@@ -73,36 +76,37 @@ nav li a.active, footer li a.active {
 }
 
 /* Tableau */
-section table, section table a {
+section table {
 	/*  list-style-type: none; */
-	margin: 10;
+	margin: 5;
 	padding: 0;
 	/*overflow: hidden;*/
 }
 
-section table a {
+/* section table a {
 	color: white;
 	text-decoration: none;
-}
+	display: block;
+} */
 
 section table tr td {
-	height: 30px;
-	/*float: left;*/
-	/* border: 1px solid #c8cec1;*/
-	background-color: #336699;
+	padding: 5px;
+	/* float: left; */
+	/* border: 1px solid #c8cec1; */
+	border-radius: 5px;
+	background-color: #49617f;
 	color: white;
+	width: 200px;
 }
 
-/* section table tr td a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 8px 16px;
-    text-decoration: none;
-    
-}*/
-section table tr td:hover {
-	background-color: #a02433;
+section table tr td a {
+	color: white;
+	text-decoration: none;
+	display: block;
+}
+
+section table tr td a:hover {
+	background-color: #aec4db;
 }
 
 /* Gallery */
@@ -222,14 +226,21 @@ to {
 	cursor: pointer;
 }
 
+section #liste-evts {
+	max-width: 200px;
+}
+
 section {
 	margin-left: 10px;
 	margin-right: 10px;
+		max-width: 800px;
+	
 }
 
 section p {
 	padding: 10px;
 }
+
 
 /* Formulaire */
 form {
@@ -288,4 +299,17 @@ section ol, section ol li, section ol li ul {
 
 section ol li ul li {
 	list-style: square;
+}
+
+ /* aside */
+ aside
+{
+    position : relative;
+    float : right;
+/*     margin : 9px 9px 0 9px; */
+    width : 400px;
+/*     height : 107px; */
+    -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+            transition : all 0.5s ease-in-out;
 }
