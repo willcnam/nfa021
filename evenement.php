@@ -8,7 +8,7 @@ $bmanager = new Bmanager();
 extract($_POST);
 
 // Participer à l'evt courant
-if (!empty($participerEvt)) {
+if (! empty($participerEvt)) {
     $bmanager->addCurrentUser2currentEvent($_SESSION['id_utilisateur'], $_SESSION["idEvtCourant"]);
 }
 ?>
@@ -22,7 +22,7 @@ if (!empty($participerEvt)) {
 <?php
 echo ('<header id="evenement">');
 try {
-    // Request evenement
+    // Récupérer l'evenement courant
     $particip = $bmanager->getEvtById($_GET['id']);
     if (sizeof($particip) > 0) {
         $_SESSION['evtCourant'] = $particip[0]["nom_evt"];
@@ -33,7 +33,7 @@ try {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
 echo ('
-<h3>...</h3>
+<h3>' . $_SESSION['username'] . '</h3>
 </header>
 <nav>
 	<ul>
@@ -45,37 +45,38 @@ echo ('
 
 // Liste des participants
 echo ('<br><h3>Liste des participants à ' . $_SESSION['evtCourant'] . '</h3>');
-echo('<aside>');
-echo ('<form action="evenement.php?id='.$_GET['id'].'" method="post">');
-echo ('		<input type="submit" id="participerEvt" value="Participer à cet événement" name="participerEvt"/>
+
+// Bouton Participer
+//     L'utilisateur actuel participe-t-il à l'evt ?
+if (! $bmanager->isParticipant($_SESSION['id_utilisateur'], $_SESSION['idEvtCourant'])) {
+    echo ('<aside>');
+    echo ('<form action="evenement.php?id=' . $_GET['id'] . '" method="post">');
+    echo ('		<input type="submit" id="participerEvt" value="Participer à cet événement" name="participerEvt"/>
 	</form>');
-echo('</aside>');
+    echo ('</aside>');
+}
+// Liste des participants
 try {
     // liste des inscrits à cet evt
     $inscrits = $bmanager->getInscritsByEvt($_GET['id']);
     if (sizeof($inscrits) > 0) {
         echo ('<table>');
         foreach ($inscrits as $isncrit) {
-//             echo ('<tr><td>'.$isncrit["id_inscrit"].'</td>
+            // echo ('<tr><td>'.$isncrit["id_inscrit"].'</td>
             echo ('<tr><td><a href="participant.php?id=' . $isncrit["id_inscrit"] . '">' . ' ' . $isncrit["email_ut"] . '</a></td></tr>');
         }
         echo ('</table>');
     } else {
-        echo ('Aucun inscrit à cet évênement actuellement.');
+        // echo ('Aucun inscrit à cet évênement actuellement.');
     }
 } catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
-// Bouton Participer
 echo ('</section>');
-?>
-	<footer>
-		<ul>
-			<li><a href="disconnection.php">Déconnexion <?php echo ($_SESSION['username'])?></a></li>
-			<li><a href="register.php">Inscription</a></li>
-		</ul>
-	</footer>
 
-</body>
+include_once 'footer.php';
+?>
+
+
 
 </html>

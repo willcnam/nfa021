@@ -7,8 +7,8 @@ include_once 'bmanager.php';
 $bmanager = new Bmanager();
 extract($_POST);
 
-// Proposer un cadeau de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
-if (!empty($suggestGiftButton) and !empty($nom_new_cad) and !empty($prix_new_cad)) {
+// PROPOSER UN CADEAU de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
+if (!empty($suggestGiftButton) and !empty($nom_new_cad) ) {
     //echo ('$suggestGiftButton n est pas vide ');
     //echo ($_SESSION['id_utilisateur'].' - '. $_SESSION['idEvtCourant'] .' - '. $_GET['id'].' - '. $_POST['nom_new_cad'].' - '. $_POST['prix_new_cad']);
     $bmanager->suggestGift($_SESSION['id_utilisateur'], $_SESSION['idEvtCourant'], $_GET['id'], $_POST['nom_new_cad'], $_POST['prix_new_cad']);
@@ -35,7 +35,7 @@ try {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
 ?>
-	<h3>...</h3>
+	<h3></h3>
 	</header>
 	<nav>
 		<ul>
@@ -45,9 +45,12 @@ try {
 		</ul>
 	</nav>
 <!-- Proposer un cadeau  --> 
-	<aside>
-		<form action="participant.php?id=<?php echo ($_GET['id'])?>" method="post">
-				<label for="nom_cad">Nouvelle propositin de cadeau</label> <input type="text" id="nom_cad"
+	<?php
+//     L'utilisateur actuel participe-t-il à l'evt ?
+if ( $bmanager->isParticipant($_SESSION['id_utilisateur'], $_SESSION['idEvtCourant'])) {
+    echo ('<aside>
+		<form action="participant.php?id=' . $_GET['id'] . '" method="post">
+				<label for="nom_cad">Nouvelle suggestion de cadeau</label> <input type="text" id="nom_cad"
 					placeholder="Saisir un nom ..." name="nom_new_cad" />
 				<label for="prix_cad"></label> <input type="text" id="nom_cad"
 					placeholder="Saisir un prix" name="prix_new_cad" />
@@ -59,34 +62,29 @@ try {
 					</div>
 				</div>
 		</form>
-	</aside>
-
-	<section>
-	<?php
-echo ('<p>Idées de cadeaux pour ' . $particip[0]["email_ut"] . '</p>');
+	</aside>');
+}
+echo ('<section>');
+echo ('<br><h3>Les suggestions de cadeaux pour ' . $particip[0]["email_ut"] . '</h3>');
 try {
     // Liste des propositions de cadeau
     $cadeaux = $bmanager->getCadeauxForParticipant($_GET['id']);
-    if (sizeof($cadeaux) > 0) {
+    if (sizeof($cadeaux) > 1) {
         echo ('<table>');
         foreach ($cadeaux as $cadeau) {
             echo ('<tr><td>' . $cadeau["id_cadeau"] . '</td><td>' . $cadeau["nom_cad"] . '</td><td>' . $cadeau["prix_cad"] . '</td><td>' . $cadeau["id_inscrit_de_cad"] . '</td></tr>');
         }
         echo ('</table>');
     } else {
-        echo ('Aucun inscrit à cet évênement actuellement.');
+        echo (' ... oh oh, aucune suggestion pour l\'instant.');
     }
 } catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
+echo('</section>');
+
+include_once 'footer.php';
 ?>
-</section>
-	<footer>
-		<ul>
-			<li><a href="disconnection.php">Déconnexion <?php echo ($_SESSION['username'])?></a></li>
-			<li><a href="register.php">Inscription</a></li>
-		</ul>
-	</footer>
 </body>
 
 </html>

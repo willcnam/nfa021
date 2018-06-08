@@ -5,6 +5,9 @@ if (empty($_SESSION['username'])) {
 }
 include_once 'bmanager.php';
 $bmanager = new Bmanager();
+include_once 'classeEvenement.php';
+$evenement = new Evenement();
+
 extract($_POST);
 ?>
 <html>
@@ -14,11 +17,12 @@ extract($_POST);
 <link rel="stylesheet" type="text/css" href="evenement.css" />
 </head>
 <body id="accueil">
+
 	<header id="accueil">
-<!-- 	<img id="banner" alt="Hy folks !" src="img/banner.png"> -->
 		<h1>Cadeaux Communs</h1>
 		<h3>Bienvenue <?php echo ($_SESSION['username']); ?> !</h3>
 	</header>
+	
 	<nav>
 		<ul>
 			<li><a href="" class="active">Evénements</a></li>
@@ -30,52 +34,8 @@ extract($_POST);
 			des cadeaux offerts à plusieurs.</p>
 	</section>
 
-	<section id="liste-evts">
-		<br>
-		<h3>Liste des évênements</h3>
-<!-- Créer un événement  --> 
-	<aside>
-		<form action="accueil.php" method="post">
-				<label for="nom_evt">Nouvel événement :</label> <input type="text" id="nom"
-					placeholder="Saisir un nom ..." name="id_new_evt" />
-				<div class="boutons">
-					<div>
-						<label for="submitbutton"></label> 
-						<input type="submit"
-							id="createEventButton" value="Créer" name="createEventButton"/>
-					</div>
-				</div>
-		</form>
-	</aside>
-
-	<?php
-// Créer un nouvel événement
-if (!empty($id_new_evt) and !empty($createEventButton)) {
-    $retour = $bmanager->creerEvenements($id_new_evt);
-    echo ($retour);
-}
-try {
-    // Liste des evenements
-    $evts = $bmanager->listeDesEvenements();
-    if (sizeof($evts) > 0) {
-        echo ('<table>');
-        foreach ($evts as $evt) {
-            echo ('<tr><td><a href="evenement.php?id=' . $evt["id_evenement"] . '">' . $evt["nom_evt"] . '</a></td></tr>');
-        }
-        echo ('</table>');
-    } else {
-        echo ('Aucun évênement actuellement. Cliquez sur Créer un évênement');
-    }
-} catch (Exception $e) {
-    trigger_error($e->getMessage(), E_USER_ERROR);
-}
-?>
-</section>
+	<!-- EXPLICATIONS -->
 	<section>
-		<!--
-            EXPLICATIONS
-        -->
-
 		<br>
 		<h3>Faire des cadeaux à plusieurs</h3>
 		<ol>
@@ -91,18 +51,43 @@ try {
 				</ul>
 			</li>
 		</ol>
-
-		<a href="evenement.php"> <img class="gallery" alt="Cadeaux.jpeg"
+<!-- 		<a href="evenement.php"> <img class="gallery" alt="Cadeaux.jpeg"
 			src="img/gifts.jpeg" />
 		</a>
-	</section>
+ -->
+ 	</section>
 
-	<footer>
-		<ul>
-			<li><a href="disconnection.php">Déconnexion <?php echo ($_SESSION['username'])?></a></li>
-			<li><a href="register.php">Inscription</a></li>
-		</ul>
-	</footer>
+<!-- EVENEMENTS  --> 
+	<section id="liste-evts">
+		<br>
+		<h3>Liste des évênements</h3>
+		
+<!-- Créer un événement  --> 
+	<aside>
+		<form action="accueil.php" method="post">
+				<label for="nom_evt">Nouvel événement :</label> <input type="text" id="nom"
+					placeholder="Saisir un nom ..." name="id_new_evt" />
+				<div class="boutons">
+					<div>
+						<label for="submitbutton"></label> 
+						<input type="submit"
+							id="createEventButton" value="Créer" name="createEventButton"/>
+					</div>
+				</div>
+		</form>
+	</aside>
+	<?php
+if (!empty($id_new_evt) and !empty($createEventButton)) {
+    echo ($bmanager->creerEvenements($id_new_evt));
+}
+
+// Afficher la liste des événements
+$evenement->getListe() ;
+echo ('</section>');
+
+include_once 'footer.php';
+?>
+	
 </body>
 
 </html>

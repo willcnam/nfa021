@@ -278,7 +278,10 @@ class Bmanager
     // Proposer un cadeau de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
     public function suggestGift($id_utilisateur, $idEvtCourant, $id_participant_pour, $nom_cad, $prix_cad)
     {
-        if (! empty($id_utilisateur) and ! empty($idEvtCourant) and ! empty($id_participant_pour) and ! empty($nom_cad) and ! empty($prix_cad)) {
+        if (! empty($id_utilisateur) and ! empty($idEvtCourant) and ! empty($id_participant_pour) and ! empty($nom_cad) ) {
+            if (empty($prix_cad)) {
+                $prix_cad = null;
+            }
             try {
                 // Trouver l'id_participant de l'utilisateur
                 // Ask for a pdo statement
@@ -320,4 +323,34 @@ class Bmanager
             }
         }
     }
+    
+    public function isParticipant($id_utilisateur, $idEvtCourant) {
+        if (! empty($id_utilisateur) and ! empty($idEvtCourant)) {
+            try {
+                // Trouver l'id_participant de l'utilisateur
+                // Ask for a pdo statement
+                $connection = new Connection($this->dbconf);
+                $pdo = $connection->dbconnect();
+                // Request participant
+                $requete = "select id_inscrit
+                        from inscrit
+                         where id_utilisateur_ins = :id_utilisateur
+                            and id_evenement_ins = :idEvtCourant ;";
+                $preparedStatement = $pdo->prepare($requete);
+                $preparedStatement->execute(array(
+                    ':id_utilisateur' => $id_utilisateur,
+                    ':idEvtCourant' => $idEvtCourant
+                ));
+                if ($preparedStatement->rowCount() > 0) {
+                    $row = $preparedStatement->fetch();
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (Exception $e) {
+                    trigger_error($e->getMessage(), E_USER_ERROR);
+                }
+            }
+        }
+    
 }
