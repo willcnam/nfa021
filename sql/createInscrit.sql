@@ -1,7 +1,7 @@
   -- > Table inscrit
   
 drop table inscrit;
-create table inscrit (
+create table sharedgifts.inscrit (
 	id_inscrit int primary key auto_increment,
 	id_utilisateur_ins int,
 	id_evenement_ins int,
@@ -14,7 +14,8 @@ create table inscrit (
     INDEX id_evenement_index (id_evenement_ins),
     FOREIGN KEY (id_evenement_ins)
         REFERENCES evenement(id_evenement)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+     CONSTRAINT ParticipationUnique UNIQUE (id_utilisateur_ins, id_evenement_ins)
 );
 
 insert into inscrit ( id_utilisateur_ins, id_evenement_ins )

@@ -215,7 +215,7 @@ class Bmanager
                 $rows = $preparedStatement->fetchAll();
                 return $rows;
             } else {
-                echo ('Aucun inscrit à cet évênement actuellement.');
+                echo ('<div id="message">Aucun inscrit à cet évênement actuellement.</div>');
                 return null;
             }
         } catch (Exception $e) {
@@ -230,18 +230,18 @@ class Bmanager
             $connection = new Connection($this->dbconf);
             $pdo = $connection->dbconnect();
             // Request liste des cadeaux d'un inscrit
-            $requete = 'select id_cadeau, nom_cad, prix_cad, id_inscrit_de_cad
-                from inscrit
-                left join cadeau
-                on id_inscrit = id_inscrit_pour_cad
-                where id_inscrit =' . $id_inscrit . ';';
+            $requete = 'select id_cadeau, nom_cad, prix_cad, id_inscrit_de_cad, email_ut
+                from cadeau 
+                join inscrit on id_inscrit_de_cad = id_inscrit
+                join utilisateur on id_utilisateur_ins = id_utilisateur
+                where id_inscrit_pour_cad =' . $id_inscrit . ';';
             $preparedStatement = $pdo->prepare($requete);
             $preparedStatement->execute();
             if ($preparedStatement->rowCount() > 0) {
                 $rows = $preparedStatement->fetchAll();
                 return $rows;
             } else {
-                echo ('Aucun cadeau pour ce participant.');
+                // echo ('Aucun cadeau pour ce participant.');
                 return null;
             }
         } catch (Exception $e) {

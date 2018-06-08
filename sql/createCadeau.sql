@@ -1,7 +1,7 @@
   -- > Table cadeau
   
 drop table cadeau;
-create table cadeau (
+create table sharedgifts.cadeau (
 	id_cadeau int primary key auto_increment,
 	nom_cad varchar(255),
     prix_cad int,
@@ -16,7 +16,8 @@ create table cadeau (
     INDEX id_inscrit_pour_index (id_inscrit_pour_cad),
     FOREIGN KEY (id_inscrit_pour_cad)
         REFERENCES inscrit(id_inscrit)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT CadeauUnique UNIQUE (nom_cad, id_inscrit_de_cad, id_inscrit_pour_cad)
 );
 
 insert into cadeau ( nom_cad, prix_cad, id_inscrit_de_cad, id_inscrit_pour_cad )

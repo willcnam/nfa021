@@ -1,7 +1,7 @@
   -- > Table participation
   
 drop table participation;
-create table participation (
+create table sharedgifts.participation (
 	id_participation int primary key auto_increment,
     montant_part int,
 	id_inscrit_de_part int,

@@ -318,3 +318,15 @@ section ol li ul li {
         -moz-transition: all 0.5s ease-in-out;
             transition : all 0.5s ease-in-out;
 }
+
+/* Message */
+div#message {
+	color: #edeff3;
+	background-color: #ff9700;
+	width: 50%;
+	padding: 6px;
+	margin: 12px;
+	border-radius: 4px;
+	text-align: center;
+}
+

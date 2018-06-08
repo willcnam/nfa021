@@ -45,6 +45,7 @@ echo ('
 
 // Liste des participants
 echo ('<br><h3>Liste des participants à ' . $_SESSION['evtCourant'] . '</h3>');
+echo ('<h5>Vous avez une idée de cadeau pour une des personnes de cette liste ?<br>Cliquez sur son nom !</h5>');
 
 // Bouton Participer
 //     L'utilisateur actuel participe-t-il à l'evt ?

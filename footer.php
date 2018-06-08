@@ -10,7 +10,7 @@ echo ("	<br><br><footer>
 			<li><a href=\"\"> ");
 			echo ($_SESSION['username']);
 echo ("</a></li>
-			<li><a href=\"disconnection.php\">Se déconnecter</a></li>
+			<li><a href=\"disconnection.php\">Déconnexion</a></li>
 			<li><a href=\"register.php\">Créer un compte</a></li>
 		</ul>
 	</footer>");

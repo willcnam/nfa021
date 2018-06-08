@@ -7,7 +7,7 @@ include_once 'bmanager.php';
 $bmanager = new Bmanager();
 extract($_POST);
 
-// PROPOSER UN CADEAU de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
+// NOUVELLE SUGGESTION DE CADEAU de l'utilisateur courant, pour l'evt courant et pour le participant de la page courante
 if (!empty($suggestGiftButton) and !empty($nom_new_cad) ) {
     //echo ('$suggestGiftButton n est pas vide ');
     //echo ($_SESSION['id_utilisateur'].' - '. $_SESSION['idEvtCourant'] .' - '. $_GET['id'].' - '. $_POST['nom_new_cad'].' - '. $_POST['prix_new_cad']);
@@ -25,17 +25,17 @@ if (!empty($suggestGiftButton) and !empty($nom_new_cad) ) {
 <?php
 // echo ($_GET['id']);
 try {
-    // Request participant
+    // Récupérer l'email du participant
     $particip = $bmanager->getparticipantById($_GET['id']);
     if (sizeof($particip) > 0) {
         $_SESSION['participantCourant'] = $particip[0]["email_ut"];
-        echo ('<h1>' . $_SESSION['participantCourant'] . '</h1>');
+        echo ('<h1>Cadeaux pour ' . $_SESSION['participantCourant']. '</h1>');
     } else {}
 } catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
+echo(	'<h3>' . $_SESSION['username']. '</h3>');
 ?>
-	<h3></h3>
 	</header>
 	<nav>
 		<ul>
@@ -63,25 +63,34 @@ if ( $bmanager->isParticipant($_SESSION['id_utilisateur'], $_SESSION['idEvtCoura
 				</div>
 		</form>
 	</aside>');
+} else {
+    echo ('<div id="message">Pour faire une suggestion de cadeau, vous devez d\'abord participer à cet événement ('.$_SESSION['evtCourant'].')</div>');
 }
 echo ('<section>');
 echo ('<br><h3>Les suggestions de cadeaux pour ' . $particip[0]["email_ut"] . '</h3>');
-try {
-    // Liste des propositions de cadeau
-    $cadeaux = $bmanager->getCadeauxForParticipant($_GET['id']);
-    if (sizeof($cadeaux) > 1) {
-        echo ('<table>');
-        foreach ($cadeaux as $cadeau) {
-            echo ('<tr><td>' . $cadeau["id_cadeau"] . '</td><td>' . $cadeau["nom_cad"] . '</td><td>' . $cadeau["prix_cad"] . '</td><td>' . $cadeau["id_inscrit_de_cad"] . '</td></tr>');
+
+// Si l'utilisateur courant n'est pas le participant, on affiche les cadeaux
+if ($_SESSION['username'] != $particip[0]["email_ut"]) {
+    try {
+        // Tableau des propositions de cadeaux
+        $cadeaux = $bmanager->getCadeauxForParticipant($_GET['id']);
+        if (sizeof($cadeaux) > 0) {
+            echo ('<table>');
+            foreach ($cadeaux as $cadeau) {
+                // echo ('<tr><td>' . $cadeau["id_cadeau"] . '</td><td>' . $cadeau["nom_cad"] . '</td><td>' . $cadeau["prix_cad"] . '</td><td>' . $cadeau["id_inscrit_de_cad"] . '</td></tr>');
+                echo ('<tr><td>' . $cadeau["nom_cad"] . '</td><td align="right">' . $cadeau["prix_cad"] . '</td><td>' . $cadeau["email_ut"] . '</td></tr>');
+            }
+            echo ('</table>');
+        } else {
+            echo ('<div id="message">... aucune suggestion pour l\'instant ...</div>');
         }
-        echo ('</table>');
-    } else {
-        echo (' ... oh oh, aucune suggestion pour l\'instant.');
+    } catch (Exception $e) {
+        trigger_error($e->getMessage(), E_USER_ERROR);
     }
-} catch (Exception $e) {
-    trigger_error($e->getMessage(), E_USER_ERROR);
+} else {
+    echo ('<div id="message">Désolé !<br>Vous ne pouvez pas voir vos cadeaux,<br> mais vous pouvez en suggérer, les autres participants verront vos suggestions ;-)</div>');
 }
-echo('</section>');
+echo ('</section>');
 
 include_once 'footer.php';
 ?>

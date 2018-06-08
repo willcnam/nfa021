@@ -34,6 +34,7 @@ if (isset($loginbutton)) {
 	<?php if (!empty($message)) {
 	    echo ($message.'<br><br>');
 	} ?>
+	<div id="formulaire">
 	<form action="login.php" method="post">
 		<input type="text" placeholder="E-mail" name="username" id="username" required autofocus /><br> <br> 
 		<input type="password" placeholder="Password" name="password" id="password" required /><br> <br> 
@@ -43,5 +44,6 @@ if (isset($loginbutton)) {
 	</form>
 	<br>
 	<a href="register.php">Créer un compte</a>
+	</div>
 </body>
 </html>
